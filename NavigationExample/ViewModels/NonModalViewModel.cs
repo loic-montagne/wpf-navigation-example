@@ -1,9 +1,4 @@
 ﻿using NavigationExample.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace NavigationExample.ViewModels
@@ -17,14 +12,15 @@ namespace NavigationExample.ViewModels
             set => SetProperty(value);
         }
 
-        public NonModalViewModel()
+        public NonModalViewModel(NavigationService navigation)
+            : base (navigation)
         {
             BindingText = "Un texte issu du databinding pour la fenêtre non modale.";
         }
 
         public void CloseWindow()
         {
-            NavigationService.Close(this);
+            Navigation.Close(this);
         }
     }
 }

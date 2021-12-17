@@ -1,24 +1,31 @@
-﻿using NavigationExample.ViewModels;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NavigationExample.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 
 namespace NavigationExample.Services
 {
-    public static class NavigationService
+    public class NavigationService
     {
-        private static Dictionary<object, Window> modalWindows =
-            new Dictionary<object, Window>();
-        private static Dictionary<object, Window> nonModalWindows =
-            new Dictionary<object, Window>();
+        private readonly IServiceProvider serviceProvider;
+        private readonly Dictionary<object, Window> modalWindows;
+        private readonly Dictionary<object, Window> nonModalWindows;
 
-        private static TViewModel GetViewModelInstance<TViewModel>(params object[] viewModelParameters)
-            where TViewModel : BaseViewModel
+        public NavigationService(IServiceProvider serviceProvider)
         {
-            return (TViewModel)Activator.CreateInstance(typeof(TViewModel), viewModelParameters);
+            this.serviceProvider = serviceProvider;
+            modalWindows = new Dictionary<object, Window>();
+            nonModalWindows = new Dictionary<object, Window>();
         }
 
-        private static TView GetViewInstance<TView>(object viewModel)
+        private TViewModel GetViewModelInstance<TViewModel>(params object[] viewModelParameters)
+            where TViewModel : BaseViewModel
+        {
+            return (TViewModel)ActivatorUtilities.CreateInstance(serviceProvider, typeof(TViewModel), viewModelParameters);
+        }
+
+        private TView GetViewInstance<TView>(object viewModel)
             where TView : class
         {
             Type tView = typeof(TView);
@@ -28,7 +35,7 @@ namespace NavigationExample.Services
             return (TView)view;
         }
 
-        public static TView Show<TView, TViewModel>(params object[] viewModelParameters)
+        public TView Show<TView, TViewModel>(params object[] viewModelParameters)
             where TView : Window
             where TViewModel : BaseViewModel
         {
@@ -37,21 +44,20 @@ namespace NavigationExample.Services
             nonModalWindows.Add(vm, view);
             view.Closing += (s, e) => 
             {
-                var w = s as Window;
-                if (w != null && nonModalWindows.ContainsKey(w.DataContext))
+                if (s is Window w && nonModalWindows.ContainsKey(w.DataContext))
                     nonModalWindows.Remove(w.DataContext);
             };
             view.Show();
             return view;
         }
 
-        public static void Close(Window view, bool? result = null)
+        public void Close(Window view, bool? result = null)
         {
             if (modalWindows.ContainsKey(view.DataContext) && result != null)
                 view.DialogResult = result;
             view.Close();
         }
-        public static bool Close<TViewModel>(TViewModel vm, bool? result = null)
+        public bool Close<TViewModel>(TViewModel vm, bool? result = null)
             where TViewModel : BaseViewModel
         {
             if (nonModalWindows.ContainsKey(vm))
@@ -67,7 +73,7 @@ namespace NavigationExample.Services
             return false;
         }
 
-        public static bool? ShowDialog<TView, TViewModel>(params object[] viewModelParameters)
+        public bool? ShowDialog<TView, TViewModel>(params object[] viewModelParameters)
             where TView : Window
             where TViewModel : BaseViewModel
         {

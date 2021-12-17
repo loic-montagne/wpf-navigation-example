@@ -1,6 +1,5 @@
 ﻿using NavigationExample.Services;
 using NavigationExample.Views;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace NavigationExample.ViewModels
@@ -10,14 +9,18 @@ namespace NavigationExample.ViewModels
         public ICommand ShowModalWindowCommand => new Command.RelayCommand(ShowModalWindow);
         public ICommand ShowNonModalWindowCommand => new Command.RelayCommand(ShowNonModalWindow);
 
+        public MainViewModel(NavigationService navigation)
+            : base (navigation)
+        { }
+
         public void ShowModalWindow()
         {
-            NavigationService.ShowDialog<ModalWindow, ModalViewModel>("Un texte issu du constructeur du viewmodel pour la fenêtre modale.");
+            Navigation.ShowDialog<ModalWindow, ModalViewModel>("Un texte issu du constructeur du viewmodel pour la fenêtre modale.");
         }
 
         public void ShowNonModalWindow()
         {
-            NavigationService.Show<NonModalWindow, NonModalViewModel>();
+            Navigation.Show<NonModalWindow, NonModalViewModel>();
         }
 
     }
