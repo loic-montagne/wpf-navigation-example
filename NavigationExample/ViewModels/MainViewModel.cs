@@ -8,6 +8,7 @@ namespace NavigationExample.ViewModels
     {
         public ICommand ShowModalWindowCommand => new Command.RelayCommand(ShowModalWindow);
         public ICommand ShowNonModalWindowCommand => new Command.RelayCommand(ShowNonModalWindow);
+        public ICommand ShowPagesNavigationWindowCommand => new Command.RelayCommand(ShowPagesNavigationWindow);
 
         public MainViewModel(NavigationService navigation)
             : base (navigation)
@@ -21,6 +22,11 @@ namespace NavigationExample.ViewModels
         public void ShowNonModalWindow()
         {
             Navigation.Show<NonModalWindow, NonModalViewModel>();
+        }
+
+        public void ShowPagesNavigationWindow()
+        {
+            Navigation.Show<PagesNavigationWindow, PagesNavigationViewModel>();
         }
 
     }

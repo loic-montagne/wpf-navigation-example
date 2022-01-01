@@ -13,6 +13,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -24,6 +26,10 @@
                 FontSize="20"
                 Content="Afficher une fenêtre non modale"
                 Command="{Binding ShowNonModalWindowCommand}"/>
+        <Button Grid.Row="5"
+                FontSize="20"
+                Content="Afficher une fenêtre contenant une navigation par page"
+                Command="{Binding ShowPagesNavigationWindowCommand}"/>
 
     </Grid>
 </Window>

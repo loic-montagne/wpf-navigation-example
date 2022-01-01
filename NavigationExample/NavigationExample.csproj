@@ -71,11 +71,24 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Command\RelayCommand.cs" />
+    <Compile Include="TemplateSelectors\PageDataTemplateSelector.cs" />
+    <Compile Include="ViewModels\Page1ViewModel.cs" />
+    <Compile Include="ViewModels\Page2ViewModel.cs" />
+    <Compile Include="ViewModels\PagesNavigationViewModel.cs" />
     <Compile Include="Views\ModalWindow.xaml.cs">
       <DependentUpon>ModalWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NonModalWindow.xaml.cs">
       <DependentUpon>NonModalWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Page1.xaml.cs">
+      <DependentUpon>Page1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Page2.xaml.cs">
+      <DependentUpon>Page2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PagesNavigationWindow.xaml.cs">
+      <DependentUpon>PagesNavigationWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -99,6 +112,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NonModalWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Page1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Page2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PagesNavigationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
