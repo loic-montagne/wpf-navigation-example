@@ -9,7 +9,7 @@ namespace NavigationExample.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Dictionary<string, object> propertyValues = new Dictionary<string, object>();
-        protected Services.NavigationService Navigation { get; }
+        protected internal Services.NavigationService Navigation { get; }
 
         public BaseViewModel(Services.NavigationService navigation)
         {

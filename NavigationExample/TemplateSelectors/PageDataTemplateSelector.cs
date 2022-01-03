@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NavigationExample.Services;
+using NavigationExample.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
-using System.Windows.Navigation;
 
 namespace NavigationExample.TemplateSelectors
 {
@@ -15,20 +17,24 @@ namespace NavigationExample.TemplateSelectors
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private Dictionary<Type, Page> pagesCache;
+        private NavigationService navigationService;
 
         public DataTemplate PageTemplate { get; }
 
         private Page currentPage;
         public Page CurrentPage => currentPage;
 
-        public Dictionary<Type, Type> Pages { get; }
+        public Dictionary<Type, Type> Pages { get; set; }
 
         public PageDataTemplateSelector()
         {
-            pagesCache = new Dictionary<Type, Page>();
+            navigationService = ((App)Application.Current).ServiceProvider.GetService<NavigationService>();
             Pages = new Dictionary<Type, Type>();
             PageTemplate = CreatePageDataTemplate();
+        }
+        ~PageDataTemplateSelector()
+        {
+            navigationService.DeleteTemplateSelector(this);
         }
 
 
@@ -38,7 +44,7 @@ namespace NavigationExample.TemplateSelectors
 
             //set up the frame
             FrameworkElementFactory spFactory = new FrameworkElementFactory(typeof(Frame));
-            spFactory.SetValue(Frame.NavigationUIVisibilityProperty, NavigationUIVisibility.Hidden);
+            spFactory.SetValue(Frame.NavigationUIVisibilityProperty, System.Windows.Navigation.NavigationUIVisibility.Hidden);
             spFactory.SetBinding(Frame.ContentProperty, new Binding(nameof(CurrentPage))
             {
                 Source = this
@@ -50,27 +56,16 @@ namespace NavigationExample.TemplateSelectors
             return pageTemplate;
         }
 
-        public override DataTemplate SelectTemplate(object viewModel, DependencyObject container)
+        public override DataTemplate SelectTemplate(object viewModelType, DependencyObject container)
         {
-            var vmType = viewModel?.GetType();
-            if (viewModel == null ||
+            if (viewModelType == null ||
+                !(viewModelType is Type vmType) ||
                 Pages == null ||
                 !Pages.ContainsKey(vmType))
-            {
                 currentPage = null;
-            }
             else
-            {
-                if (pagesCache.ContainsKey(vmType))
-                    currentPage = pagesCache[vmType];
-                else
-                {
-                    currentPage = (Page)Activator.CreateInstance(Pages[viewModel.GetType()]);
-                    currentPage.DataContext = viewModel;
-                    pagesCache[vmType] = currentPage;
-                }
-                
-            }
+                currentPage = navigationService.GetPage(this, Pages[vmType], vmType);
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentPage)));
             
             return PageTemplate;

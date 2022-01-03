@@ -1,13 +1,14 @@
 ﻿using NavigationExample.Services;
+using System;
 using System.Windows.Input;
 
 namespace NavigationExample.ViewModels
 {
     public class PagesNavigationViewModel : BaseViewModel
     {
-        public BaseViewModel CurrentPageViewModel 
+        public Type CurrentPageViewModelType 
         { 
-            get => GetProperty<BaseViewModel>();
+            get => GetProperty<Type>();
             set => SetProperty(value);
         }
         public ICommand ShowPage1Command => new Command.RelayCommand(ShowPage1);
@@ -21,11 +22,11 @@ namespace NavigationExample.ViewModels
 
         public void ShowPage1()
         {
-            CurrentPageViewModel = Navigation.GetViewModelInstance<Page1ViewModel>();
+            CurrentPageViewModelType = typeof(Page1ViewModel);
         }
         public void ShowPage2()
         {
-            CurrentPageViewModel = Navigation.GetViewModelInstance<Page2ViewModel>();
+            CurrentPageViewModelType = typeof(Page2ViewModel);
         }
         public void CloseWindow()
         {

@@ -25,5 +25,10 @@ namespace NavigationExample.Command
             if (CanExecute(parameter))
                 execute?.Invoke();
         }
+
+        public void OnCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
